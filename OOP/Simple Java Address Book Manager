@@ -1,0 +1,80 @@
+import java.util.Scanner;
+
+public class AddressBookEntry {
+    private String name;
+    private String address;
+    private String telephoneNumber;
+    private String emailAddress;
+
+    
+    public AddressBookEntry(String name, String address, String telephoneNumber, String emailAddress) {
+        this.name = name;
+        this.address = address;
+        this.telephoneNumber = telephoneNumber;
+        this.emailAddress = emailAddress;
+    }
+
+    
+    public AddressBookEntry() {}
+
+    
+    public String getName() { return name; }
+    public String getAddress() { return address; }
+    public String getTelephoneNumber() { return telephoneNumber; }
+    public String getEmailAddress() { return emailAddress; }
+
+    
+    public void setName(String name) { this.name = name; }
+    public void setAddress(String address) { this.address = address; }
+    public void setTelephoneNumber(String telephoneNumber) { this.telephoneNumber = telephoneNumber; }
+    public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress; }
+
+    
+    public void setDataFromUser() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Name: ");
+        name = sc.nextLine();
+
+        System.out.print("Enter Address: ");
+        address = sc.nextLine();
+
+        System.out.print("Enter Telephone Number: ");
+        telephoneNumber = sc.nextLine();
+
+        System.out.print("Enter Email Address: ");
+        emailAddress = sc.nextLine();
+    }
+
+    
+    public void displayEntry() {
+        System.out.println("\n--- Address Book Entry ---");
+        System.out.println("Name: " + name);
+        System.out.println("Address: " + address);
+        System.out.println("Telephone: " + telephoneNumber);
+        System.out.println("Email: " + emailAddress);
+        System.out.println("------------------------------");
+    }
+
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("How many entries do you want to add? ");
+        int n = sc.nextInt();
+        sc.nextLine(); 
+
+        AddressBookEntry[] entries = new AddressBookEntry[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for Entry " + (i + 1) + ":");
+            entries[i] = new AddressBookEntry();
+            entries[i].setDataFromUser();
+        }
+
+        System.out.println("\n--- All Entries ---");
+        for (AddressBookEntry entry : entries) {
+            entry.displayEntry();
+        }
+    }
+}
