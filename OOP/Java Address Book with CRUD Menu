@@ -1,0 +1,114 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class AddressBook {
+    private ArrayList<AddressBookEntry> entries;
+
+    
+    public AddressBook() {
+        entries = new ArrayList<>();
+    }
+
+    
+    public void addEntry() {
+        AddressBookEntry entry = new AddressBookEntry();
+        entry.setDataFromUser();
+        entries.add(entry);
+        System.out.println("✅ Entry added successfully!");
+    }
+
+    
+    public void viewAllEntries() {
+        if (entries.isEmpty()) {
+            System.out.println("📭 No entries found.");
+        } else {
+            for (AddressBookEntry entry : entries) {
+                entry.displayEntry();
+            }
+        }
+    }
+
+    
+    public void deleteEntry(String name) {
+        boolean found = false;
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).getName().equalsIgnoreCase(name)) {
+                entries.remove(i);
+                System.out.println("🗑️ Entry deleted successfully!");
+                found = true;
+                break;
+            }
+        }
+        if (!found) System.out.println("❌ Entry not found.");
+    }
+
+    
+    public void updateEntry(String name) {
+        boolean found = false;
+        for (AddressBookEntry entry : entries) {
+            if (entry.getName().equalsIgnoreCase(name)) {
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Updating entry for: " + entry.getName());
+
+                System.out.print("Enter new address: ");
+                String newAddress = sc.nextLine();
+                System.out.print("Enter new telephone number: ");
+                String newTelephone = sc.nextLine();
+                System.out.print("Enter new email address: ");
+                String newEmail = sc.nextLine();
+
+                entry.setAddress(newAddress);
+                entry.setTelephoneNumber(newTelephone);
+                entry.setEmailAddress(newEmail);
+
+                System.out.println("✅ Entry updated successfully!");
+                found = true;
+                break;
+            }
+        }
+        if (!found) System.out.println("❌ Entry not found.");
+    }
+
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        AddressBook book = new AddressBook();
+        int choice;
+
+        do {
+            System.out.println("\n📘 --- ADDRESS BOOK MENU ---");
+            System.out.println("1. Add Entry");
+            System.out.println("2. View All Entries");
+            System.out.println("3. Update Entry");
+            System.out.println("4. Delete Entry");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    book.addEntry();
+                    break;
+                case 2:
+                    book.viewAllEntries();
+                    break;
+                case 3:
+                    System.out.print("Enter name to update: ");
+                    String updateName = sc.nextLine();
+                    book.updateEntry(updateName);
+                    break;
+                case 4:
+                    System.out.print("Enter name to delete: ");
+                    String deleteName = sc.nextLine();
+                    book.deleteEntry(deleteName);
+                    break;
+                case 5:
+                    System.out.println("👋 Exiting program... Goodbye!");
+                    break;
+                default:
+                    System.out.println("⚠️ Invalid choice. Try again.");
+            }
+        } while (choice != 5);
+    }
+}
