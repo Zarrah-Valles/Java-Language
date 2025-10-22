@@ -1,0 +1,70 @@
+import java.util.Scanner;
+
+public class Room {
+    private int roomNo;
+    private String roomType;
+    private double roomArea;
+    private boolean hasACMachine;
+
+    
+    public void setData(int roomNo, String roomType, double roomArea, boolean hasACMachine) {
+        this.roomNo = roomNo;
+        this.roomType = roomType;
+        this.roomArea = roomArea;
+        this.hasACMachine = hasACMachine;
+    }
+
+    
+    public void setDataFromUser() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Room Number: ");
+        roomNo = sc.nextInt();
+        sc.nextLine(); 
+
+        System.out.print("Enter Room Type: ");
+        roomType = sc.nextLine();
+
+        System.out.print("Enter Room Area (sqm): ");
+        roomArea = sc.nextDouble();
+        sc.nextLine(); 
+
+        System.out.print("Does the room have an AC machine? (yes/no): ");
+        String acInput = sc.nextLine().trim().toLowerCase();
+
+        
+        hasACMachine = acInput.equals("yes");
+    }
+
+    
+    public void displayData() {
+        System.out.println("\n--- Room Information ---");
+        System.out.println("Room No: " + roomNo);
+        System.out.println("Room Type: " + roomType);
+        System.out.println("Room Area: " + roomArea + " sqm");
+        System.out.println("AC Machine: " + (hasACMachine ? "Yes" : "No"));
+        System.out.println("----------------------------");
+    }
+
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("How many rooms do you want to enter? ");
+        int n = sc.nextInt();
+        sc.nextLine(); 
+
+        Room[] rooms = new Room[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for Room " + (i + 1) + ":");
+            rooms[i] = new Room();
+            rooms[i].setDataFromUser();
+        }
+
+        System.out.println("\n--- All Room Details ---");
+        for (Room r : rooms) {
+            r.displayData();
+        }
+    }
+}
