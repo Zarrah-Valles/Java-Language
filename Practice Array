@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+        int total = 0;
+        
+        System.out.print("Enter name: ");
+        String name = in.nextLine();
+        
+        System.out.print("Enter the number of grades you want to input: ");
+        int size = in.nextInt();
+        int [] grade = new int[size];
+        
+        for (int i = 0; i < size; i++){
+            System.out.print("Enter grade no." + (i+1) + ": ");
+            grade[i] = in.nextInt();
+            
+            if(grade[i] >= 0 && grade[i] <= 100){
+                total += grade[i];
+            }
+            else{
+                System.out.print("You can only input a grade less than or equal to 100\n");
+                System.out.print("Do you want to insert again? Y/N: ");
+                char ans = in.next().charAt(0);
+                
+                if(ans == 'Y' || ans == 'y'){
+                    i--;
+                    continue;
+                }
+                else{
+                    System.out.println("Exiting Program...");
+                    System.exit(0);
+                }
+            }
+        
+        }
+        
+        System.out.print("Grades you had input: \n");
+        for (int i = 0; i < size; i++){
+            System.out.println(grade[i]);
+        }
+        
+        double average = (double) total / size;
+        
+        System.out.printf("\nTotal Average: %.2f", average);
+    }
+}
