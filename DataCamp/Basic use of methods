@@ -34,3 +34,43 @@ class StringReverser {
     System.out.println(reverse(word));
   }
 }
+
+class PriceCalculator {
+  // Give the correct type to your function
+  static double oneAndAHalf(double a) {
+    // Use the proper operations to get the result
+    return a * 1.5;
+  }
+
+  public static void main(String[] args) {
+    double[] numbers = {76, 38.3, 10, 42, 98.5, 84, 50, 72.2, 98, 96};
+
+    // Use the congruous type of for loop
+    for (int i = 0; i < numbers.length; i++) {
+      numbers[i] = oneAndAHalf(numbers[i]);
+      System.out.println(numbers[i]);
+    }
+  }
+}
+
+--------------------------------------------------------------------------------------
+
+class LongestFinder {
+  // Give the appropriate type to wordsList
+  static String findLongestIn(String[] wordsList) {
+    String longest = "";
+
+    for (String word : wordsList) {
+      // Enter the fitting comparison to select the longer word
+      if (word.length() > longest.length())
+        longest = word;
+    }
+    return longest;
+  }
+
+  public static void main(String[] args) {
+    String[] words = {"possible", "first", "null", "avoidance", "mineral", "pretty", "tree", "rather", "innocuous"};
+    // Call the correct method to find the longest word
+    System.out.println(findLongestIn(words));
+  }
+}
