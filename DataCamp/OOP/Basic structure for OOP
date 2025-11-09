@@ -1,0 +1,48 @@
+class Main {  
+
+  static class Car {
+      String color;
+      String model;
+      int year;
+
+	  // Create constructor method	
+      Car() {        
+          this.model = "camry";
+          // Assign the values for the model and year properties
+          this.color = "red"; //the function of this is to call the defined variables from another class
+          this.year = 2019;
+      }
+
+  }
+  
+  public static void main(String[] args) {
+    Car myCar = new Car(); //renaming the class to a new class name that will be used in the main
+    // Print the "color" property
+    System.out.println(myCar.color);
+  }
+}
+
+-----------------------------------------------------------------------------------------------------------------
+
+class Main {  
+
+  static class Car {
+      String color;
+      String model;
+      int year;
+
+      // Update constructor parameters
+      Car(String color, String model, int year){
+          this.color = color;
+          this.model = model;
+          // Set the year property
+          this.year = year;
+      }
+  }
+  
+  public static void main(String[] args) {
+  	// Create object instance with correct parameters
+    Car myCar = new Car("blue", "corolla", 2022);
+    System.out.println(myCar.year);
+  }
+}
