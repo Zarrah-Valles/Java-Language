@@ -1,0 +1,41 @@
+public class Main {  
+    static abstract class Car {
+        public Car() {
+            // Abstract base class constructor
+        }
+
+        // Abstract method to be implemented by subclasses
+        public abstract void soundHorn();
+    }
+
+    static class Toyota extends Car {
+        public Toyota() {
+            super();
+        }
+
+        // Implementation of soundHorn for Toyota
+        public void soundHorn() {
+            System.out.println("sounds like a toyota");
+        }
+    }
+
+    static class Mercedes extends Car {
+        public Mercedes() {
+            super();
+        }
+
+        // Implementation of soundHorn for Mercedes
+        public void soundHorn() {
+            System.out.println("sounds like a mercedes");
+        }
+    }
+    
+    public static void main(String[] args) {
+        Toyota myToyota = new Toyota();
+        Mercedes myMercedes = new Mercedes();
+        
+        // Call "soundHorn" for myToyota and myMercedes
+        myToyota.soundHorn();
+        myMercedes.soundHorn();
+    }
+}
