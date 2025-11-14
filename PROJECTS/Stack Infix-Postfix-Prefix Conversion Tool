@@ -1,0 +1,399 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class IT2D_Group9_Lab4 {
+
+    static Scanner input = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        System.out.println("-- Start --");
+        menu();
+        System.out.println("-- End --");
+    }
+
+    // -- Reusable function
+    static int getInt(String prompt, String ePrompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return input.nextInt();
+                
+            } catch (Exception e) {
+                    System.out.println(ePrompt);
+                System.out.println();
+            } finally {
+                input.nextLine();
+            }
+
+        }
+    }
+
+    static boolean inputYN(String prompt, String tScenario, String fScenario) {
+        String uInput = "";
+        while (true) {
+            System.out.print(prompt);
+            uInput = input.nextLine().toLowerCase().replace(" ", "");
+            if (uInput.equals("yes")) {
+                System.out.println(tScenario);
+                return true;
+            } else if (uInput.equals("no")) {
+                System.out.println(fScenario);
+                return false;
+            } else {
+                    System.out.print("\u000C");
+                System.out.println("// Error: Invalid Input // \n");
+            }
+        }
+    }
+
+    static String inputExpression(String prompt) {
+        System.out.print(prompt);
+        return input.nextLine().replace(" ", "");
+    }
+
+    static boolean isOperator(char x) {
+        return x == '+' || x == '-' || x == '*' || x == '/' || x == '^';
+    }
+
+    static boolean isOperand(char x) {
+        return Character.isLetterOrDigit(x);
+    }
+    static boolean haveDigit(String expression) {
+        for(int i = 0; i < expression.length(); i++) {
+            if(Character.isDigit(expression.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Infix validation
+    static boolean isInfix(String expression) {
+        if (expression.isEmpty()) {
+            System.out.println("// Error: The expression is empty //");
+            return false;
+        }
+        if (expression.length() == 1) {
+            System.out.println("// Error: The expression only have 1 character //");
+            return false;
+        }
+        int parentheses = 0;
+        char prev = expression.charAt(0);
+        if (isOperator(prev)) {
+            System.out.println("// Error: Expression cannot start with an operator //");
+            return false;
+        }
+
+        for (int i = 0; i < expression.length(); i++) {
+                        if (!isOperand(expression.charAt(i)) && !isOperator(expression.charAt(i))) {
+                                    System.out.println("// Error: Invalid character detected: " + expression.charAt(i) + " //");
+                                    return false;
+                        }
+
+            if (expression.charAt(i) == '(')
+                parentheses++;
+            else if (expression.charAt(i) == ')')
+                parentheses--;
+            if (parentheses < 0) {
+                System.out.println("// Error: Closing parentheses is greater than opening parentheses //");
+                return false;
+            }
+
+            // Check for invalid sequences
+            if (i > 0) {
+                if (isOperator(prev) && isOperator(expression.charAt(i))) {
+                    System.out.println("// Error: Two operators cannot be together //");
+                    return false;
+                }
+                if (isOperand(prev) && isOperand(expression.charAt(i))) {
+                    System.out.println("// Error: Two operands cannot be together //");
+                    return false;
+                }
+                if (isOperand(prev) && expression.charAt(i) == '(' || expression.charAt(i) == ')') {
+                    System.out.println("// Error: Operand cannot be directly followed by a parentheses //");
+                    return false;
+                }
+            }
+            prev = expression.charAt(i);
+        }
+
+        if (isOperator(prev)) {
+            System.out.println("// Error: Expression cannot end with an operator //");
+            return false;
+        }
+
+        if (parentheses != 0) {
+            System.out.println("// Error: Unbalanced parentheses //");
+            return false;
+        }
+        return true;
+    }
+    
+    private static int precedence(char op) {
+        switch (op) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+            default:
+                return -1;
+        }
+    }
+    
+    private static String convertInfixToPostfix(String expression) {
+        StringBuilder result = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+
+            if (isOperand(c)) {
+                result.append(c);
+            }
+            else if (c == '(') {
+                stack.push(c);
+            }
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                if (!stack.isEmpty() && stack.peek() == '(')
+                    stack.pop();
+            }
+            else if (isOperator(c)) {
+                while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    if (stack.peek() == '(')
+                        break;
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.toString();
+    }
+
+    private static String toReverse(String expression) {
+        String revString = "";
+        for (int i = expression.length() - 1; i >= 0; i--) {
+            if (expression.charAt(i) == '(') {
+                revString += ")";
+            } else if (expression.charAt(i) == ')') {
+                revString += "(";
+            } else {
+                revString += expression.charAt(i);
+            }
+        }
+        return revString;
+    }
+
+    
+    static boolean isValidPostfix(String exp) {
+
+        if (exp.isEmpty()) {
+            System.out.println("// Error: The expression is empty //");
+            return false;
+        }
+        if (exp.length() == 1) {
+            System.out.println("// Error: The expression only have 1 character //");
+            return false;
+        }
+
+        int count = 0;
+
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+
+            
+            if (!isOperand(c) && !isOperator(c)) {
+                System.out.println("// Error: Invalid character detected: " + c + " //");
+                return false;
+            }
+
+            
+            if (c == '(' || c == ')') {
+                System.out.println("// Error: Parentheses are not allowed in postfix expressions //");
+                return false;
+            }
+
+            if (isOperand(c)) {
+                count++; 
+            } 
+            else if (isOperator(c)) {
+                if (count < 2) {
+                    System.out.println("// Error: Too many operators or insufficient operands //");
+                    return false;
+                }
+                count--; 
+            }
+        }
+
+        if (count != 1) {
+            System.out.println("// Error: Invalid postfix expression structure //");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static String convertPostfixToInfix(String exp) {
+        Stack<String> stack = new Stack<>();
+
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+
+            if (isOperand(c)) {
+                stack.push(Character.toString(c));
+            } else if (isOperator(c)) {
+                String b = stack.pop();
+                String a = stack.pop();
+
+                if (stackPrecedence(a) < stackPrecedence(Character.toString(c)))
+                    a = "(" + a + ")";
+                if (stackPrecedence(b) < stackPrecedence(Character.toString(c)))
+                    b = "(" + b + ")";
+
+                String res = a + c + b;
+                stack.push(res);
+            }
+        }
+        return stack.pop();
+    }
+
+    private static int stackPrecedence(String exp) {
+        if (exp.length() == 1 && isOperand(exp.charAt(0))) return 3;
+        if (exp.contains("+") || exp.contains("-")) return 1;
+        if (exp.contains("*") || exp.contains("/")) return 2;
+        if (exp.contains("^")) return 3;
+        return 0;
+    }
+
+    // -- Main Function --
+    public static void menu() {
+        int choose = -1;
+
+        while (true) {
+            System.out.println();
+            System.out.println("-------- [Menu] --------");
+            System.out.println("| [1] Infix to Postfix |");
+            System.out.println("| [2] Infix to Prefix  |");
+            System.out.println("| [3] Postfix to Infix |");
+            System.out.println("| [0] Stop             |");
+            System.out.println("------------------------");
+
+            choose = getInt("Enter a Number: ", "//Error: Input Number (0-3) Only //");
+
+            switch (choose) {
+            case 1:
+                    System.out.print("\u000C");
+                infixToPostfix();
+                System.out.print("\u000C");
+                break;
+            case 2:
+                        System.out.print("\u000C");
+                infixToPrefix();
+                System.out.print("\u000C");
+                break;
+            case 3:
+                        System.out.print("\u000C");
+                postfixToInfix();
+                    System.out.print("\u000C");
+                break;
+            case 0:
+                    System.out.print("\u000C");
+                if (stop())
+                    return;
+                break;
+            default:
+                        System.out.print("\u000C");
+                System.out.println("// Error: Invalid Input //");
+                System.out.println();
+            }
+        }
+    }
+
+    private static void infixToPostfix() {
+        System.out.println("-- Infix To Postfix Start --");
+        String expression = "";
+        do {
+            expression = inputExpression("Enter Infix Expression: ");
+
+            if (isInfix(expression)) {
+                System.out.println("Original: " + expression);
+                String postfix = convertInfixToPostfix(expression);
+                System.out.println("Postfix: " + postfix);
+            } else {
+                System.out.println("// Error: Expression is not a valid infix //");
+            }
+
+            System.out.println();
+        } while (inputYN("Do you want to try again? (yes/no): ",
+                "-- Input again an expression --\n",
+                "-- Returning to Menu --"));
+
+        System.out.println("-- Infix To Postfix End --");
+    }
+
+    private static void infixToPrefix() {
+        System.out.println("-- Infix To Prefix Start --");
+        String expression = "";
+        do {
+            expression = inputExpression("Enter Infix Expression: ");
+            
+            if(haveDigit(expression)) {
+                System.out.println("// Error: The expression have digit //");
+            } else {
+                if (isInfix(expression)) {
+                    System.out.println("original: " + expression);
+                    expression = toReverse(expression);
+                    expression = convertInfixToPostfix(expression);
+                    expression = toReverse(expression);
+                    System.out.println("Prefix: " + expression);
+                } else {
+                    System.out.println("// Error: Expression is not a valid infix //");
+                }                
+            }
+
+            System.out.println();
+        } while (inputYN("Do you want to try again? (yes/no): ", "-- Input again an expression -- \n",
+                "-- Returning to Menu --"));
+
+        System.out.println("-- Infix To Prefix End --");
+    }
+
+    private static void postfixToInfix() {
+        System.out.println("-- Postfix To Infix Start --");
+        String expression = "";
+
+        do {
+            expression = inputExpression("Enter Postfix Expression: ");
+
+            if (!isValidPostfix(expression)) {
+                System.out.println();
+            } else {
+                String infix = convertPostfixToInfix(expression);
+                System.out.println("Original: " + expression);
+                System.out.println("Infix: " + infix);
+            }
+
+            System.out.println();
+        } while (inputYN("Do you want to try again? (yes/no): ",
+                "-- Input again an expression --\n",
+                "-- Returning to Menu --"));
+
+        System.out.println("-- Postfix To Infix End --");
+    }
+
+    private static boolean stop() {
+        return inputYN("Are you sure to exit? (yes/no): ", "-- Terminating the Program --", "-- Returning to menu --");
+    }
+}
