@@ -1,0 +1,38 @@
+import java.util.Scanner;
+
+public class Day2 {
+    public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+        
+        System.out.print("Enter the size of array: ");
+        int size = in.nextInt();
+        
+        int[] array = new int[size];
+        
+        System.out.println("Enter " + array.length + " values");
+        for (int i = 0; i < array.length; i++){
+            array[i] = in.nextInt();
+        }
+
+        System.out.println("List of the array: ");
+        for (int i = 0; i < array.length; i++){
+            System.out.print(array[i] + " ");
+            if ((i + 1) % 5 == 0){
+                System.out.println();
+            }
+        }
+        
+        int[] reverse = new int[array.length];
+        for (int i = 0; i < array.length; i++){
+            reverse[i] = array[array.length - 1 - i];
+        }
+        
+        System.out.println("List of the reversed array: ");
+        for (int i = 0; i < reverse.length; i++){
+            System.out.print(reverse[i] + " ");
+            if ((i + 1) % 5 == 0){
+                System.out.println();
+            }
+        } 
+    }
+}
