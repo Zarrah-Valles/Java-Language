@@ -1,0 +1,150 @@
+/**
+ * EmployeeSalaryCalculator.java
+ *
+ * Simple console program to calculate an employee's salary (gross, tax, deductions, net pay).
+ *
+ * Features:
+ * - Reads employee details from standard input.
+ * - Calculates HRA and DA as percentages of basic salary.
+ * - Calculates overtime pay.
+ * - Allows additional allowances and deductions.
+ * - Applies a tax rate (entered as a percentage) to gross salary.
+ *
+ * Usage:
+ * Compile: javac EmployeeSalaryCalculator.java
+ * Run:     java EmployeeSalaryCalculator
+ *
+ * Example:
+ * Enter employee name: Alice
+ * Enter employee id: 1001
+ * Enter basic salary: 50000
+ * Enter HRA % (e.g., 20 for 20%): 20
+ * Enter DA % (e.g., 10 for 10%): 10
+ * Enter overtime hours: 5
+ * Enter overtime rate per hour: 500
+ * Enter other allowances: 2000
+ * Enter other deductions: 1500
+ * Enter tax rate % (e.g., 10 for 10%): 10
+ *
+ * Payslip will be shown after input.
+ */
+
+import java.util.Scanner;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class EmployeeSalaryCalculator {
+
+    static class Employee {
+        String name;
+        String id;
+        double basicSalary;
+        double hraPercent;
+        double daPercent;
+        double overtimeHours;
+        double overtimeRate;
+        double otherAllowances;
+        double otherDeductions;
+        double taxRatePercent;
+
+        Employee(String name, String id, double basicSalary) {
+            this.name = name;
+            this.id = id;
+            this.basicSalary = basicSalary;
+        }
+
+        double calculateHRA() {
+            return basicSalary * hraPercent / 100.0;
+        }
+
+        double calculateDA() {
+            return basicSalary * daPercent / 100.0;
+        }
+
+        double calculateOvertimePay() {
+            return overtimeHours * overtimeRate;
+        }
+
+        double calculateGrossSalary() {
+            return basicSalary + calculateHRA() + calculateDA() + calculateOvertimePay() + otherAllowances;
+        }
+
+        double calculateTax() {
+            return calculateGrossSalary() * taxRatePercent / 100.0;
+        }
+
+        double calculateNetSalary() {
+            return calculateGrossSalary() - calculateTax() - otherDeductions;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
+
+        System.out.print("Enter employee name: ");
+        String name = sc.nextLine().trim();
+
+        System.out.print("Enter employee id: ");
+        String id = sc.nextLine().trim();
+
+        double basic = readDouble(sc, "Enter basic salary: ");
+
+        Employee emp = new Employee(name, id, basic);
+
+        emp.hraPercent = readDouble(sc, "Enter HRA % (e.g., 20 for 20%): ");
+        emp.daPercent = readDouble(sc, "Enter DA % (e.g., 10 for 10%): ");
+        emp.overtimeHours = readDouble(sc, "Enter overtime hours: ");
+        emp.overtimeRate = readDouble(sc, "Enter overtime rate per hour: ");
+        emp.otherAllowances = readDouble(sc, "Enter other allowances: ");
+        emp.otherDeductions = readDouble(sc, "Enter other deductions: ");
+        emp.taxRatePercent = readDouble(sc, "Enter tax rate % (e.g., 10 for 10%): ");
+
+        // Calculations
+        double hra = emp.calculateHRA();
+        double da = emp.calculateDA();
+        double overtime = emp.calculateOvertimePay();
+        double gross = emp.calculateGrossSalary();
+        double tax = emp.calculateTax();
+        double net = emp.calculateNetSalary();
+
+        // Output payslip
+        System.out.println();
+        System.out.println("========================================");
+        System.out.println("               PAYSLIP                   ");
+        System.out.println("========================================");
+        System.out.println("Employee Name : " + emp.name);
+        System.out.println("Employee ID   : " + emp.id);
+        System.out.println("----------------------------------------");
+        System.out.printf("Basic Salary  : %12s%n", nf.format(emp.basicSalary));
+        System.out.printf("HRA (%.2f%%)    : %12s%n", emp.hraPercent, nf.format(hra));
+        System.out.printf("DA (%.2f%%)     : %12s%n", emp.daPercent, nf.format(da));
+        System.out.printf("Overtime Pay  : %12s%n", nf.format(overtime));
+        System.out.printf("Allowances    : %12s%n", nf.format(emp.otherAllowances));
+        System.out.println("----------------------------------------");
+        System.out.printf("Gross Salary  : %12s%n", nf.format(gross));
+        System.out.printf("Tax (%.2f%%)    : %12s%n", emp.taxRatePercent, nf.format(tax));
+        System.out.printf("Deductions    : %12s%n", nf.format(emp.otherDeductions));
+        System.out.println("----------------------------------------");
+        System.out.printf("Net Pay       : %12s%n", nf.format(net));
+        System.out.println("========================================");
+
+        sc.close();
+    }
+
+    private static double readDouble(Scanner sc, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) {
+                System.out.println("Please enter a value.");
+                continue;
+            }
+            try {
+                return Double.parseDouble(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Try again.");
+            }
+        }
+    }
+}
