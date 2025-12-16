@@ -5,6 +5,8 @@ public Main {
     Scanner in = new Scanner(System.in);
 
     System.out.print("Hello Zarrah");
+    System.out.print("Enter your name:");
+    char name = name nextChar
     
 
     
